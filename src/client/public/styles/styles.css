@@ -1,0 +1,148 @@
+html {
+    background: #333;
+    font-family: Arial, sans-serif;
+}
+
+.channel {
+    width: 150px;
+    height: 270px;
+    background: #000;
+    color: #fff;
+    font-size: 14px;
+    padding: 5px 10px;
+}
+
+.channel-info {
+    margin-bottom: 15px;
+}
+
+.id {
+    font-size: 25px;
+    font-weight: bold;
+    margin-right: 13px;
+}
+
+.name {
+    background-color: #34343F;
+    width: 115px;
+    cursor: text;
+    display: inline-block;
+    line-height: 27px;
+    padding: 0 4px;
+}
+
+.name:hover {
+    color: #26C9FF;
+}
+
+.indicators {
+    margin-left: 14px;
+    margin-bottom: 18px;
+}
+
+.indicator {
+    margin-bottom: 10px;
+    line-height: 24px;
+}
+
+.indicator span,
+.indicator span.on:hover {
+    border-radius: 12px;
+    height: 24px;
+    width: 24px;
+    background-color: rgb(102, 102, 102);
+    float: left;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.indicator span.on,
+.indicator span:hover {
+    background-color: rgb(112, 214, 41);
+}
+
+.indicator.peak span.on,
+.indicator.peak span:hover {
+    background-color: rgb(214, 56, 25);
+}
+
+.gain {
+    margin-bottom: 18px;
+    overflow: hidden;
+}
+
+.gain > div {
+    float: left;
+}
+
+.gain > div:last-child {
+    float: right;
+}
+
+.gain .input label {
+    font-size: 16px;
+    display: block;
+}
+
+.gain .input span {
+    font-size: 30px;
+    cursor: text;
+}
+
+.gain .input span:hover {
+    color: #26C9FF;
+}
+
+.gain .controls > div {
+    background-image: url("../images/gainDOWN.jpg");
+    display: block;
+    width: 75px;
+    height: 38px;
+    cursor: pointer;
+}
+
+.gain .controls > div:hover,
+.gain .controls > div:active {
+    background-image: url("../images/gainDOWNclick.jpg");
+}
+
+.gain .controls > div.increase {
+    background-image: url("../images/gainUP.jpg");
+}
+
+.gain .controls > div.increase:hover,
+.gain .controls > div.increase:active {
+    background-image: url("../images/gainUPClick.jpg");
+}
+
+.gain .controls > div:first-child {
+    margin-bottom: 8px;
+}
+
+.actions a {
+    width: 45px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    font-size: 16px;
+    background: linear-gradient(#69697C, #424251);
+    display: inline-block;
+    margin-right: 7px;
+    cursor: pointer;
+}
+.actions a:last-child {
+    margin-right: 0;
+}
+.actions a.volts:hover,
+.actions a.volts.on {
+    background: linear-gradient(#8C2300, #D93600);
+}
+.actions a.phase:hover,
+.actions a.phase.on {
+    background: linear-gradient(#8C6900, #D9A300);
+}
+
+.actions a.ribbon:hover,
+.actions a.ribbon.on {
+    background: linear-gradient(#00468C, #006DD9);
+}
