@@ -1,11 +1,14 @@
 import React from 'react';
 import {render} from 'react-dom';
 
+import {HeaderComponent} from "./HeaderComponent.jsx";
 import {ChannelComponent} from "./ChannelComponent.jsx";
+import {ADCComponent} from "./ADCComponent.jsx";
+import {StatusComponent} from "./StatusComponent.jsx";
 
 class App extends React.Component {
     render() {
-        var channel = [
+        let channels = [
             {
                 id: 1,
                 name: 'Channel name',
@@ -87,7 +90,15 @@ class App extends React.Component {
                 ribbon: false
             }
         ];
-        return <ChannelComponent channel={channel}/>;
+        let channelComponents = channels.map(channel => {
+            return <ChannelComponent key={channel.id} channel={channel}/>;
+        });
+        return <div className="preamp">
+            <HeaderComponent />
+            <div className="channels">{channelComponents}</div>
+            <ADCComponent />
+            <StatusComponent />
+        </div>;
     }
 }
 
