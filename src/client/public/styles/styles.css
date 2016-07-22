@@ -162,25 +162,22 @@ header {
     line-height: 24px;
 }
 
-.indicator span,
-.indicator span.on:hover {
+.indicator span {
     border-radius: 12px;
     height: 24px;
     width: 24px;
     background-color: rgb(102, 102, 102);
     float: left;
     margin-right: 10px;
-    cursor: pointer;
 }
 
-.indicator span.on,
-.indicator span:hover {
+.indicator span.on {
     background-color: rgb(112, 214, 41);
 }
 
-.indicator.peak span.on,
-.indicator.peak span:hover {
+.indicator.peak span.on {
     background-color: rgb(214, 56, 25);
+    cursor: pointer;
 }
 
 .gain {
@@ -198,6 +195,7 @@ header {
 
 .gain .input {
     width: 47px;
+    text-align: right;
 }
 
 .gain .input label {
