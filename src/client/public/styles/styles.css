@@ -253,6 +253,10 @@ header {
     margin-right: 7px;
     cursor: pointer;
     text-align: center;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 .actions a:last-child {
     margin-right: 0;
