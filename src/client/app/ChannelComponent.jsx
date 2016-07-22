@@ -1,40 +1,108 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+
+import {InlineEditorComponent} from "./InlineEditorComponent.jsx";
+import {DataService} from "./DataService.js";
 
 export class ChannelComponent extends React.Component {
 
+    constructor() {
+        super();
+        this.dataService = new DataService();
+        this.state = {};
+    }
+
+    componentDidMount() {
+        this.setState({
+            channel: this.props.channel
+        });
+        this.setWidths();
+        window.addEventListener('resize', this.setWidths.bind(this));
+    }
+
+    componentDidUnmount() {
+        window.removeEventListener('resize', this.setWidths.bind(this));
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            channel: nextProps.channel
+        });
+    }
+
+    toggleValue(name, channel) {
+        this.saveValue(name, null, channel);
+    }
+
+    saveValue(name, value, channel) {
+        this.dataService.save(name, value, channel, response => {
+            if (response.channels.length === 1) {
+                this.setState({
+                    channel: response.channels[0]
+                });
+            }
+        });
+    }
+
+    increaseGain() {
+        this.saveValue('PGNS', this.state.channel.gain + 1, this.state.channel.no);
+    }
+
+    decreaseGain() {
+        this.saveValue('PGNS', this.state.channel.gain - 1, this.state.channel.no);
+    }
+
+    setWidths() {
+        let name = ReactDOM.findDOMNode(this.refs.name),
+            id = ReactDOM.findDOMNode(this.refs.id),
+            channel = ReactDOM.findDOMNode(this.refs.channel),
+            channelWrapper = ReactDOM.findDOMNode(this.refs.channelWrapper);
+
+        channel.style.display = 'none';
+        channel.style.width = (parseInt(window.getComputedStyle(channelWrapper).getPropertyValue('width'), 10) - 28) + 'px';
+        channel.style.display = 'block';
+
+        let nameWidth = parseInt(window.getComputedStyle(channel).getPropertyValue('width'), 10)
+                        - parseInt(window.getComputedStyle(id).getPropertyValue('width'), 10) - 9;
+        name.style.width = `${nameWidth}px`;
+    }
+
     render() {
-        var channel = this.props.channel;
-        console.log(channel);
+        let channel = this.state.channel || this.props.channel;
         return (
-            <div className="channel">
-                <div className="channel-info">
-                    <span className="id">{channel.id}</span>
-                    <span className="name">{channel.name}</span>
-                </div>
-                <div className="indicators">
-                    <div className="indicator peak">
-                        <span className={'indicator-button' + (channel.peak ? ' on' : '')}></span>
-                        PEAK
+            <div className="channel-wrapper" ref="channelWrapper">
+                <div className="channel" ref="channel">
+                    <div className="channel-info">
+                        <span className="id" ref="id">{channel.id}</span>
+                        <div className="name" ref="name">
+                            <InlineEditorComponent value={channel.name} name="NMCH" channel={channel.no} maxLength="11" />
+                        </div>
                     </div>
-                    <div className="indicator">
-                        <span className={'indicator-button' + (channel.signal ? ' on' : '')}></span>
-                        SIGNAL
+                    <div className="indicators">
+                        <div className="indicator peak">
+                            <span className={'indicator-button ' + channel.over}></span>
+                            PEAK
+                        </div>
+                        <div className="indicator">
+                            <span className={'indicator-button ' + channel.sig}></span>
+                            SIGNAL
+                        </div>
                     </div>
-                </div>
-                <div className="gain">
-                    <div className="input">
-                        <label>GAIN</label>
-                        <span>{channel.gain}</span>
+                    <div className="gain">
+                        <div className="input">
+                            <label>GAIN</label>
+                            <InlineEditorComponent value={channel.gain} name="PGNS" channel={channel.no} maxLength="2" />
+                        </div>
+                        <div className="controls">
+                            <div className="increase" onClick={this.increaseGain.bind(this)}></div>
+                            <div className="decrease" onClick={this.decreaseGain.bind(this)}></div>
+                        </div>
                     </div>
-                    <div className="controls">
-                        <div className="increase"></div>
-                        <div className="decrease"></div>
+                    <div className="actions">
+                        <a className={'volts ' + (channel['48V'])} onClick={this.toggleValue.bind(this, 'P48T', channel.no)}>48v</a>
+                        <a className={'phase ' + (channel['phase'])} onClick={this.toggleValue.bind(this, 'PPHT', channel.no)}>&#248;</a>
+                        <a className={'ribbon ' + (channel['rbbn'])} onClick={this.toggleValue.bind(this, 'PIPT', channel.no)}>RBN</a>
                     </div>
-                </div>
-                <div className="actions">
-                    <a className={'volts' + (channel.volts ? ' on' : '')}>48v</a>
-                    <a className={'phase' + (channel.phase ? ' on' : '')}>&#248;</a>
-                    <a className={'ribbon' + (channel.ribbon ? ' on' : '')}>RBN</a>
                 </div>
             </div>
         );
