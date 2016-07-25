@@ -37,9 +37,9 @@ export class ChannelComponent extends React.Component {
     saveValue(name, value, channel) {
         this.dataService.save(name, value, channel, response => {
             if (response.channels.length === 1) {
-                this.setState({
+                /*this.setState({
                     channel: response.channels[0]
-                });
+                });*/
             }
         });
     }
@@ -47,11 +47,6 @@ export class ChannelComponent extends React.Component {
     increaseGain() {
         if (this.state.channel.gain < 68) {
             let gain = this.state.channel.gain + 1;
-            this.state.channel.gain = gain;
-            this.setState({
-                channel: this.state.channel
-            });
-
             this.saveValue('PGNS', gain, this.state.channel.no);
         }
     }
@@ -59,10 +54,6 @@ export class ChannelComponent extends React.Component {
     decreaseGain() {
         if (this.state.channel.gain > 0) {
             let gain = this.state.channel.gain - 1;
-            this.state.channel.gain = gain;
-            this.setState({
-                channel: this.state.channel
-            });
             this.saveValue('PGNS', gain, this.state.channel.no);
         }
     }
