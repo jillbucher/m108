@@ -28,11 +28,11 @@ export class StatusComponent extends React.Component {
             </div>
             <div className="preamp-name">
                 <label>Name</label>
-                <InlineEditorComponent value={this.props.sys.name} name="NMDV" maxLength="11" />
+                <InlineEditorComponent type="name" value={this.props.sys.name} name="NMDV" maxLength="11" />
             </div>
-            <div className="indicator on">
-                <span className="on"></span>
-                Online
+            <div className={'indicator ' + (this.props.online ? ' on' : '')}>
+                <label>Online</label>
+                <span className={this.props.online ? 'on' : ''}></span>
             </div>
         </div>;
     }

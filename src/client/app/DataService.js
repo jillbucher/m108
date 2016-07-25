@@ -1,12 +1,12 @@
 export class DataService {
 
-    getStatus(callback) {
-        this.request('/?CMD_PSTS', callback);
+    getStatus(callback, errorCallback) {
+        this.request('/?CMD_PSTS', callback, errorCallback);
     }
 
     save(name, value, channel, callback) {
         let paramValue = '';
-        if (channel && value) {
+        if (channel && value !== null) {
             paramValue = channel + ',' + value;
         } else if (channel) {
             paramValue = channel;
@@ -16,18 +16,30 @@ export class DataService {
         this.request('/?CMD_'+name+'=' + paramValue, callback);
     }
 
-    request(url, callback) {
+    request(url, callback, errorCallback) {
         let request = new XMLHttpRequest();
         request.onreadystatechange = () => {
             if (request.readyState === 4) {
                 if (request.status === 200) {
-                    let response = JSON.parse(request.responseText);
-                    callback.call(this, response);
+                    try {
+                        let response = JSON.parse(request.responseText);
+                        if (callback) {
+                            callback.call(this, response);
+                        }
+                    } catch(e) {
+                        if (errorCallback) {
+                            errorCallback.call()
+                        }
+                    }
+                } else {
+                    if (errorCallback) {
+                        errorCallback.call();
+                    }
                 }
             }
         };
 
-        request.open('GET', 'http://192.168.0.6' + url, true);
+        request.open('GET', url, true);
         request.send();
     }
 }

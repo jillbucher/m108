@@ -45,11 +45,30 @@ export class ChannelComponent extends React.Component {
     }
 
     increaseGain() {
-        this.saveValue('PGNS', this.state.channel.gain + 1, this.state.channel.no);
+        if (this.state.channel.gain < 68) {
+            let gain = this.state.channel.gain + 1;
+            this.state.channel.gain = gain;
+            this.setState({
+                channel: this.state.channel
+            });
+
+            this.saveValue('PGNS', gain, this.state.channel.no);
+        }
     }
 
     decreaseGain() {
-        this.saveValue('PGNS', this.state.channel.gain - 1, this.state.channel.no);
+        if (this.state.channel.gain > 0) {
+            let gain = this.state.channel.gain - 1;
+            this.state.channel.gain = gain;
+            this.setState({
+                channel: this.state.channel
+            });
+            this.saveValue('PGNS', gain, this.state.channel.no);
+        }
+    }
+
+    clearPeak() {
+        this.toggleValue('DOVC', this.state.channel.no);
     }
 
     setWidths() {
@@ -67,6 +86,14 @@ export class ChannelComponent extends React.Component {
         name.style.width = `${nameWidth}px`;
     }
 
+    getGainDisplayValue(gain) {
+        if (gain === 0) {
+            return -6;
+        } else {
+            return (gain + 1);
+        }
+    }
+
     render() {
         let channel = this.state.channel || this.props.channel;
         return (
@@ -75,13 +102,13 @@ export class ChannelComponent extends React.Component {
                     <div className="channel-info">
                         <span className="id" ref="id">{channel.id}</span>
                         <div className="name" ref="name">
-                            <InlineEditorComponent value={channel.name} name="NMCH" channel={channel.no} maxLength="11" />
+                            <InlineEditorComponent type="name" value={channel.name} name="NMCH" channel={channel.no} maxLength="11" />
                         </div>
                     </div>
                     <div className="indicators">
                         <div className="indicator peak">
-                            <span className={'indicator-button ' + channel.over}></span>
-                            PEAK
+                            <span className={'indicator-button ' + channel.over} onClick={channel.over  === 'on' ? this.clearPeak.bind(this) : ''}></span>
+                            OVER
                         </div>
                         <div className="indicator">
                             <span className={'indicator-button ' + channel.sig}></span>
@@ -91,15 +118,15 @@ export class ChannelComponent extends React.Component {
                     <div className="gain">
                         <div className="input">
                             <label>GAIN</label>
-                            <InlineEditorComponent value={channel.gain} name="PGNS" channel={channel.no} maxLength="2" />
+                            <InlineEditorComponent type="gain" value={this.getGainDisplayValue(channel.gain)} name="PGNS" channel={channel.no} maxLength="2" />
                         </div>
                         <div className="controls">
-                            <div className="increase" onClick={this.increaseGain.bind(this)}></div>
-                            <div className="decrease" onClick={this.decreaseGain.bind(this)}></div>
+                            <div className={'increase' + (channel.gain >= 68 ? ' disabled' : '')} onClick={this.increaseGain.bind(this)}></div>
+                            <div className={'decrease' + (channel.gain <= 0 ? ' disabled' : '')} onClick={this.decreaseGain.bind(this)}></div>
                         </div>
                     </div>
                     <div className="actions">
-                        <a className={'volts ' + (channel['48V'])} onClick={this.toggleValue.bind(this, 'P48T', channel.no)}>48v</a>
+                        <a className={'volts ' + (channel['48V']) + (channel['rbbn'] ===  'on' ? ' disabled' : '')} onClick={channel['rbbn'] === 'on' ? '' : this.toggleValue.bind(this, 'P48T', channel.no)}>48v</a>
                         <a className={'phase ' + (channel['phase'])} onClick={this.toggleValue.bind(this, 'PPHT', channel.no)}>&#248;</a>
                         <a className={'ribbon ' + (channel['rbbn'])} onClick={this.toggleValue.bind(this, 'PIPT', channel.no)}>RBN</a>
                     </div>

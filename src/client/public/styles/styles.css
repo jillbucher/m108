@@ -24,6 +24,10 @@ body {
     padding: 0 4px;
     font-size: .87em;
     display: block;
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .inline-edit:hover {
@@ -88,6 +92,15 @@ body {
 
 .dropdown-items li:hover {
     background-color: #bbb;
+}
+
+/* Loading */
+
+.loading {
+    width: 100%;
+    height: 346px;
+    line-height: 346px;
+    text-align: center;
 }
 
 /* Channel */
@@ -180,6 +193,16 @@ header {
     cursor: pointer;
 }
 
+.status .indicator {
+    line-height: inherit;
+}
+
+.status .indicator span {
+    display: block;
+    float: none;
+    margin: 0 auto;
+}
+
 .gain {
     margin-bottom: 18px;
     overflow: hidden;
@@ -194,7 +217,7 @@ header {
 }
 
 .gain .input {
-    width: 47px;
+    width: 60px;
     text-align: right;
 }
 
@@ -206,10 +229,20 @@ header {
     font-size: 2.15em;
     line-height: 1em;
 }
-
-@media only screen and (max-width: 1400px) {
+@media only screen and (max-width: 1450px) {
+    .gain .input {
+        width: 53px;
+    }
     .gain .input span {
         font-size: 1.85em;
+    }
+}
+@media only screen and (max-width: 1350px) {
+    .gain .input {
+        width: 47px;
+    }
+    .gain .input span {
+        font-size: 1.6em;
     }
 }
 
@@ -225,7 +258,10 @@ header {
     cursor: pointer;
 }
 
-.gain .controls > div:hover,
+.gain .controls > div:hover {
+    background-image: url("../images/gainDOWNhover.jpg");
+}
+
 .gain .controls > div:active {
     background-image: url("../images/gainDOWNclick.jpg");
 }
@@ -234,13 +270,30 @@ header {
     background-image: url("../images/gainUP.jpg");
 }
 
-.gain .controls > div.increase:hover,
+.gain .controls > div.increase:hover {
+    background-image: url("../images/gainUPhover.jpg");
+}
+
 .gain .controls > div.increase:active {
     background-image: url("../images/gainUPclick.jpg");
 }
 
 .gain .controls > div:first-child {
     margin-bottom: 8px;
+}
+
+.gain .controls > div.disabled {
+    cursor: default;
+}
+
+.gain .controls > div.disabled:hover,
+.gain .controls > div.disabled:active {
+    background-image: url("../images/gainDOWN.jpg");
+}
+
+.gain .controls > div.increase.disabled:hover,
+.gain .controls > div.increase.disabled:active {
+    background-image: url("../images/gainUP.jpg");
 }
 
 .actions a {
@@ -276,6 +329,9 @@ header {
 .actions a.phase.on:hover {
     background: #D9A300;
 }
+.actions a.ribbon {
+    font-size: .9em;
+}
 .actions a.ribbon.on {
     background: linear-gradient(#00468C, #006DD9);
 }
@@ -283,8 +339,17 @@ header {
     background: #006DD9;
 }
 
+.actions a.disabled {
+    cursor: default;
+    background: linear-gradient(#69697C, #424251);
+}
+
+.actions a.disabled:hover {
+    background: linear-gradient(#69697C, #424251);
+}
+
 @media only screen and (max-width: 1400px) {
-    .actions a {
+    .actions a.ribbon {
         font-size: .9em;
     }
 }
@@ -364,13 +429,25 @@ header {
 }
 
 .preamp-name {
-    width: 78px;
+    width: 155px;
 }
 
-.status .indicator {
-    line-height: 45px;
+.status .indicator > span {
+    background-color: rgb(214, 56, 25);
 }
 
-.status .indicator span {
-    margin-top: 10px;
+.status .indicator > span.on {
+    background-color: rgb(112, 214, 41);
+}
+
+@media only screen and (max-width: 1500px) {
+    .preamp-name {
+        width: 135px;
+    }
+}
+
+@media only screen and (max-width: 1400px) {
+    .preamp-name {
+        width: 110px;
+    }
 }

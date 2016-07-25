@@ -13,13 +13,14 @@ class App extends React.Component {
         super();
         this.dataService = new DataService();
         this.state = {
-            data: null
+            data: null,
+            online: true
         };
     }
 
     componentDidMount() {
         this.fetch();
-        this.timer = setInterval(this.fetch.bind(this), 500);
+        this.timer = setInterval(this.fetch.bind(this), 250);
     }
 
     componentDidUnmount() {
@@ -27,11 +28,19 @@ class App extends React.Component {
     }
 
     fetch() {
-        this.dataService.getStatus(response => {
-            this.setState({
-                data: response
+        this.dataService.getStatus(
+            response => {
+                this.setState({
+                    data: response,
+                    online: true
+                });
+            },
+            () => {
+                this.setState({
+                    data: this.state.data,
+                    online: false
+                });
             });
-        });
     }
 
     render() {
@@ -44,11 +53,11 @@ class App extends React.Component {
                 <div>
                     <div className="channels">{channelComponents}</div>
                     <ADCComponent adc={this.state.data.adc} />
-                    <StatusComponent sys={this.state.data.sys} />
+                    <StatusComponent sys={this.state.data.sys} online={this.state.online} />
                 </div>
             );
         } else {
-            body = 'Loading';
+            body = <div className="loading">Loading...</div>;
         }
         return <div className="preamp">
             <HeaderComponent />

@@ -33,18 +33,46 @@ export class InlineEditorComponent extends React.Component {
             editing: false
         });
         this.props.value = input.value;
+        let value = input.value;
+        if (this.props.type === 'gain') {
+            value = parseInt(value, 10);
+            if (value === -6) {
+                value = 0;
+            } else {
+                value = parseInt(input.value, 10) - 1;
+            }
+        }
         this.dataService.save(
             this.props.name,
-            this.props.value,
+            value,
             this.props.channel,
-            response => {
-                console.log('saved', response);
-            });
+            response => {});
     }
 
     handleKeyDown(event) {
         if (event.keyCode === 13) {
             this.save();
+        } else if (this.props.type === 'name') {
+            //Allow a-zA-Z0-9-_
+            if ((event.keyCode > 57
+                    && event.keyCode < 65
+                    && event.keyCode > 90
+                    && event.keyCode !== 189)
+                || event.keyCode === 32) {
+                event.preventDefault();
+            } else if (event.keyCode >= 48 && event.keyCode <= 57 && event.shiftKey) {
+                event.preventDefault();
+            }
+        } else if (this.props.type === 'gain') {
+            if ((event.keyCode > 57 && event.keyCode !== 189) || event.shiftKey || event.keyCode === 48) {
+                event.preventDefault();
+            } else if (event.keyCode > 48) {
+                if (parseInt(event.target.value, 10) >= 7) {
+                    event.preventDefault();
+                } else if (event.target.value === '-' && event.keyCode !== 54) {
+                    event.preventDefault();
+                }
+            }
         }
     }
 

@@ -14,12 +14,23 @@ export class DropdownComponent extends React.Component {
     }
 
     componentDidMount() {
-        let selected = this.props.selected;
+        this.setSelectedFromProps();
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevProps.selected !== this.props.selected) {
+            this.setSelectedFromProps();
+        }
+    }
+
+    setSelectedFromProps() {
         let found = this.props.options.find(option => option.value === this.props.selected);
+
+        let selected = null;
         if (found) {
-            selected = found.label;
+            selected = found;
         } else {
-            selected = this.props.options[0].label;
+            selected = this.props.options[0];
         }
         this.setState({
             expanded: false,
@@ -44,11 +55,9 @@ export class DropdownComponent extends React.Component {
     select(option) {
         this.setState({
             expanded: false,
-            selected: option.label
+            selected: option
         });
-        this.dataService.save(this.props.name, option.value, null, response => {
-            console.log(response);
-        });
+        this.dataService.save(this.props.name, option.value, null, response => {});
     }
 
     render() {
@@ -64,10 +73,11 @@ export class DropdownComponent extends React.Component {
                 </ul>;
         }
 
+        let label = this.state.selected ? this.state.selected.label : '';
         return (
             <div className="dropdown-menu" tabIndex="0" onBlur={ this.collapse.bind(this)} >
                 <div className="selected" onClick={this.expand.bind(this)}>
-                    <span>{this.state.selected}</span>
+                    <span>{label}</span>
                 </div>
                 {dropdown}
             </div>

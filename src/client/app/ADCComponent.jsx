@@ -5,6 +5,23 @@ import {DropdownComponent} from "./DropdownComponent.jsx";
 
 export class ADCComponent extends React.Component {
 
+    constructor() {
+        super();
+        this.state = {};
+    }
+
+    componentDidMount() {
+        this.setState({
+            adc: this.props.adc
+        });
+    }
+
+    componentWillReceiveProps(nextProps) {
+        this.setState({
+            adc: nextProps.adc
+        });
+    }
+
     getSampleRateOptions() {
         return [
             {value: 0, label: 'Off'},
@@ -13,7 +30,7 @@ export class ADCComponent extends React.Component {
             {value: 3, label: '88.2kHz'},
             {value: 4, label: '96kHz'},
             {value: 5, label: '176.4kHz'},
-            {value: 6, label: '19kHz'},
+            {value: 6, label: '192kHz'},
             {value: 7, label: 'USB'},
             {value: 8, label: 'DANTE'}
         ];
@@ -58,36 +75,37 @@ export class ADCComponent extends React.Component {
     }
 
     render() {
+        let adc = this.state.adc || this.props.adc;
         return <div className="adc" ref="adc">
             <label className="control">ADC</label>
             <div className="control">
                 <div className="control-inner">
                     <label>Sample Rate</label>
-                    <DropdownComponent name="ADFS" options={this.getSampleRateOptions()} selected={this.props.adc.fs} />
+                    <DropdownComponent name="ADFS" options={this.getSampleRateOptions()} selected={adc.fs} />
                 </div>
             </div>
             <div className="control">
                 <div className="control-inner">
                     <label>Clock Source</label>
-                    <DropdownComponent name="ADCK" options={this.getClockSourceOptions()} selected={this.props.adc.clkout} />
+                    <DropdownComponent name="ADCK" options={this.getClockSourceOptions()} selected={adc.clksrc} />
                 </div>
             </div>
             <div className="control">
                 <div className="control-inner">
                     <label>Output Format</label>
-                    <DropdownComponent name="ADTX" options={this.getOutputFormatOptions()} selected={this.props.adc.fmt} />
+                    <DropdownComponent name="ADTX" options={this.getOutputFormatOptions()} selected={adc.fmt} />
                 </div>
             </div>
             <div className="control">
                 <div className="control-inner">
                     <label>Clock Out Source</label>
-                    <DropdownComponent name="ADOC" options={this.getClockOutSourceOptions()} selected={this.props.adc.clkout} />
+                    <DropdownComponent name="ADOC" options={this.getClockOutSourceOptions()} selected={adc.clkout} />
                 </div>
             </div>
             <div className="control">
                 <div className="control-inner">
                     <label>Clock Status</label>
-                    <div className={'value ' + this.props.adc.clksts}>{this.props.adc.clksts}</div>
+                    <div className={'value ' + adc.clksts}>{adc.clksts}</div>
                 </div>
             </div>
         </div>;
