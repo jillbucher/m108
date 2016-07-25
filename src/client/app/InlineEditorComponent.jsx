@@ -54,22 +54,26 @@ export class InlineEditorComponent extends React.Component {
             this.save();
         } else if (this.props.type === 'name') {
             //Allow a-zA-Z0-9-_
-            if ((event.keyCode > 57
-                    && event.keyCode < 65
-                    && event.keyCode > 90
-                    && event.keyCode !== 189)
-                || event.keyCode === 32) {
+            if ((event.keyCode > 57 && event.keyCode < 65)
+                || (event.keyCode > 90 && event.keyCode < 96)
+                || (event.keyCode > 105 && event.keyCode !== 189 && event.keyCode !== 109)
+                || event.keyCode === 32
+            ) {
                 event.preventDefault();
             } else if (event.keyCode >= 48 && event.keyCode <= 57 && event.shiftKey) {
                 event.preventDefault();
             }
         } else if (this.props.type === 'gain') {
-            if ((event.keyCode > 57 && event.keyCode !== 189) || event.shiftKey || event.keyCode === 48) {
+            if (
+                    (event.keyCode > 57 && (event.keyCode <= 96 || event.keyCode > 105) && event.keyCode !== 189 && event.keyCode !== 109)
+                    || event.shiftKey
+                    || event.keyCode === 48
+                ) {
                 event.preventDefault();
             } else if (event.keyCode > 48) {
                 if (parseInt(event.target.value, 10) >= 7) {
                     event.preventDefault();
-                } else if (event.target.value === '-' && event.keyCode !== 54) {
+                } else if (event.target.value === '-' && event.keyCode !== 54 && event.keyCode !== 102) {
                     event.preventDefault();
                 }
             }

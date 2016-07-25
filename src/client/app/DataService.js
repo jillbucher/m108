@@ -28,6 +28,7 @@ export class DataService {
                         }
                     } catch(e) {
                         if (errorCallback) {
+                            console.log('json failed', e, request.responseText);
                             errorCallback.call()
                         }
                     }

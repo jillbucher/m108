@@ -36,10 +36,11 @@ class App extends React.Component {
                 });
             },
             () => {
-                this.setState({
+                /*this.setState({
                     data: this.state.data,
                     online: false
-                });
+                });*/
+                clearInterval(this.timer);
             });
     }
 
