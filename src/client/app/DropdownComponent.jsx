@@ -24,11 +24,11 @@ export class DropdownComponent extends React.Component {
     }
 
     setSelectedFromProps() {
-        let found = this.props.options.find(option => option.value === this.props.selected);
+        let found = this.props.options.filter(option => option.value === this.props.selected);
 
         let selected = null;
-        if (found) {
-            selected = found;
+        if (found.length > 0) {
+            selected = found[0];
         } else {
             selected = this.props.options[0];
         }

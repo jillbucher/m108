@@ -2,24 +2,32 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {DropdownComponent} from "./DropdownComponent.jsx";
+import {DataService} from "./DataService.js";
 
 export class ADCComponent extends React.Component {
 
     constructor() {
         super();
+        this.dataService = new DataService();
         this.state = {};
     }
 
     componentDidMount() {
         this.setState({
-            adc: this.props.adc
+            adc: this.props.add
         });
+        this.setWidths();
+        window.addEventListener('resize', this.setWidths.bind(this));
     }
 
     componentWillReceiveProps(nextProps) {
         this.setState({
             adc: nextProps.adc
         });
+    }
+
+    componentDidUnmount() {
+        window.removeEventListener('resize', this.setWidths.bind(this));
     }
 
     getSampleRateOptions() {
@@ -59,15 +67,6 @@ export class ADCComponent extends React.Component {
         ];
     }
 
-    componentDidMount() {
-        this.setWidths();
-        window.addEventListener('resize', this.setWidths.bind(this));
-    }
-
-    componentDidUnmount() {
-        window.removeEventListener('resize', this.setWidths.bind(this));
-    }
-
     setWidths() {
         let adc = ReactDOM.findDOMNode(this.refs.adc);
         let width = (parseInt(window.getComputedStyle(adc.parentNode).getPropertyValue('width'), 10) / 8 * 6) - 8;
@@ -76,6 +75,7 @@ export class ADCComponent extends React.Component {
 
     render() {
         let adc = this.state.adc || this.props.adc;
+
         return <div className="adc" ref="adc">
             <label className="control">ADC</label>
             <div className="control">

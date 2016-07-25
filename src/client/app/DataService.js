@@ -21,16 +21,19 @@ export class DataService {
         request.onreadystatechange = () => {
             if (request.readyState === 4) {
                 if (request.status === 200) {
+                    let success = false;
+                    let response = null;
                     try {
-                        let response = JSON.parse(request.responseText);
-                        if (callback) {
-                            callback.call(this, response);
-                        }
+                        response = JSON.parse(request.responseText);
+                        success = true;
                     } catch(e) {
                         if (errorCallback) {
                             console.log('json failed', e, request.responseText);
                             errorCallback.call()
                         }
+                    }
+                    if (success && callback) {
+                        callback.call(this, response);
                     }
                 } else {
                     if (errorCallback) {
