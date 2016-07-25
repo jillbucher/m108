@@ -27,10 +27,7 @@ export class DataService {
                         response = JSON.parse(request.responseText);
                         success = true;
                     } catch(e) {
-                        if (errorCallback) {
-                            console.log('json failed', e, request.responseText);
-                            errorCallback.call()
-                        }
+                        console.log('json failed', e, request.responseText);
                     }
                     if (success && callback) {
                         callback.call(this, response);
