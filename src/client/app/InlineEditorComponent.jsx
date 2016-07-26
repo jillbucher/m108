@@ -65,7 +65,7 @@ export class InlineEditorComponent extends React.Component {
             }
         } else if (this.props.type === 'gain') {
             if (
-                    (event.keyCode > 57 && (event.keyCode <= 96 || event.keyCode > 105) && event.keyCode !== 189 && event.keyCode !== 109)
+                    (event.keyCode > 57 && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !== 189 && event.keyCode !== 109)
                     || event.shiftKey
                 ) {
                 event.preventDefault();

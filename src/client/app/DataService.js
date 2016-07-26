@@ -18,7 +18,7 @@ export class DataService {
 
     request(url, callback, errorCallback) {
         let request = new XMLHttpRequest();
-        request.timeout = 1000;
+        request.timeout = 2000;
         request.onreadystatechange = () => {
             if (request.readyState === 4) {
                 if (request.status === 200) {

@@ -58,9 +58,7 @@ export class ChannelComponent extends React.Component {
             this.timer = clearInterval(this.timer);
         }
         this.timer = setInterval(() => {
-            if (((new Date()).getTime() - this.timerStarted) >= 450) {
-                callback.call(this);
-            }
+            callback.call(this);
         }, 250);
     }
 
@@ -104,6 +102,63 @@ export class ChannelComponent extends React.Component {
 
     render() {
         let channel = this.state.channel || this.props.channel;
+        let touch = false;
+        if (!!("ontouchstart" in window) || window.navigator.msMaxTouchPoints > 0) {
+            touch = true;
+        }
+
+        let gainUp;
+        if (touch ) {
+            gainUp = <div
+                className={'increase' + (channel.gain >= 68 ? ' disabled' : '')}
+                onTouchStart={() => {
+                    this.gainStartHandler(this.increaseGain);
+                }}
+                onTouchEnd={() => {
+                    this.gainEndHandler(this.increaseGain);
+                }}
+                onTouchCancel={() => {
+                    this.gainEndHandler();
+                }}>
+            </div>
+        } else {
+            gainUp = <div
+                className={'increase' + (channel.gain >= 68 ? ' disabled' : '')}
+                onMouseDown={() => {
+                    this.gainStartHandler(this.increaseGain);
+                }}
+                onMouseUp={() => {
+                    this.gainEndHandler(this.increaseGain);
+                }}>
+            </div>
+        }
+        let gainDown;
+        if (touch) {
+            gainDown = <div
+                className={'decrease' + (channel.gain <= 0 ? ' disabled' : '')}
+                onTouchStart={() => {
+                    this.gainStartHandler(this.decreaseGain);
+                }}
+                onTouchEnd={() => {
+                    this.gainEndHandler(this.decreaseGain);
+                }}
+                onTouchCancel={() => {
+                    this.gainEndHandler();
+                }}>
+            </div>;
+        } else {
+            gainDown = <div
+                className={'decrease' + (channel.gain <= 0 ? ' disabled' : '')}
+                onMouseDown={() => {
+                    this.gainStartHandler(this.decreaseGain);
+                }}
+                onMouseUp={() => {
+                    this.gainEndHandler(this.decreaseGain);
+                }}>
+            </div>;
+        }
+
+
         return (
             <div className="channel-wrapper" ref="channelWrapper">
                 <div className="channel" ref="channel">
@@ -129,42 +184,8 @@ export class ChannelComponent extends React.Component {
                             <InlineEditorComponent type="gain" value={this.getGainDisplayValue(channel.gain)} name="PGNS" channel={channel.no} maxLength="2" />
                         </div>
                         <div className="controls">
-                            <div
-                                className={'increase' + (channel.gain >= 68 ? ' disabled' : '')}
-                                onMouseDown={() => {
-                                    this.gainStartHandler(this.increaseGain);
-                                }}
-                                onMouseUp={() => {
-                                    this.gainEndHandler(this.increaseGain);
-                                }}
-                                onTouchStart={() => {
-                                    this.gainStartHandler(this.increaseGain);
-                                }}
-                                onTouchEnd={() => {
-                                    this.gainEndHandler(this.increaseGain);
-                                }}
-                                onTouchCancel={() => {
-                                    this.gainEndHandler();
-                                }}>
-                            </div>
-                            <div
-                                className={'decrease' + (channel.gain <= 0 ? ' disabled' : '')}
-                                onMouseDown={() => {
-                                    this.gainStartHandler(this.decreaseGain);
-                                }}
-                                onMouseUp={() => {
-                                    this.gainEndHandler(this.decreaseGain);
-                                }}
-                                onTouchStart={() => {
-                                    this.gainStartHandler(this.decreaseGain);
-                                }}
-                                onTouchEnd={() => {
-                                    this.gainEndHandler(this.decreaseGain);
-                                }}
-                                onTouchCancel={() => {
-                                    this.gainEndHandler();
-                                }}>
-                            </div>
+                            {gainUp}
+                            {gainDown}
                         </div>
                     </div>
                     <div className="actions">
