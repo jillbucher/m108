@@ -67,13 +67,14 @@ export class InlineEditorComponent extends React.Component {
             if (
                     (event.keyCode > 57 && (event.keyCode <= 96 || event.keyCode > 105) && event.keyCode !== 189 && event.keyCode !== 109)
                     || event.shiftKey
-                    || event.keyCode === 48
                 ) {
                 event.preventDefault();
-            } else if (event.keyCode > 48) {
+            } else if (event.keyCode >= 48) {
                 if (parseInt(event.target.value, 10) >= 7) {
                     event.preventDefault();
                 } else if (event.target.value === '-' && event.keyCode !== 54 && event.keyCode !== 102) {
+                    event.preventDefault();
+                } else if (event.target.value.length === 0 && (event.keyCode === 48 || event.keyCode === 96)) {
                     event.preventDefault();
                 }
             }

@@ -57,17 +57,21 @@ export class ChannelComponent extends React.Component {
         if (this.timer) {
             this.timer = clearInterval(this.timer);
         }
-        this.timer = setInterval(() => callback.call(this), 250);
+        this.timer = setInterval(() => {
+            if (((new Date()).getTime() - this.timerStarted) >= 450) {
+                callback.call(this);
+            }
+        }, 250);
     }
 
     gainEndHandler(callback) {
+        clearInterval(this.timer);
         let now = (new Date()).getTime();
-        if (now - this.timerStarted < 250) {
+        if ((now - this.timerStarted) < 500) {
             if (callback) {
                 callback.call(this);
             }
         }
-        clearInterval(this.timer);
         this.timer = null;
     }
 
@@ -155,7 +159,7 @@ export class ChannelComponent extends React.Component {
                                     this.gainStartHandler(this.decreaseGain);
                                 }}
                                 onTouchEnd={() => {
-                                    this.gainStartHandler(this.decreaseGain);
+                                    this.gainEndHandler(this.decreaseGain);
                                 }}
                                 onTouchCancel={() => {
                                     this.gainEndHandler();
