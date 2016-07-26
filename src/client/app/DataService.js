@@ -18,6 +18,7 @@ export class DataService {
 
     request(url, callback, errorCallback) {
         let request = new XMLHttpRequest();
+        request.timeout = 1000;
         request.onreadystatechange = () => {
             if (request.readyState === 4) {
                 if (request.status === 200) {
@@ -27,7 +28,7 @@ export class DataService {
                         response = JSON.parse(request.responseText);
                         success = true;
                     } catch(e) {
-                        console.log('json failed', e, request.responseText);
+                        //Ignore json errors
                     }
                     if (success && callback) {
                         callback.call(this, response);
@@ -37,6 +38,12 @@ export class DataService {
                         errorCallback.call();
                     }
                 }
+            }
+        };
+
+        request.ontimeout = () => {
+            if (errorCallback) {
+                errorCallback.call();
             }
         };
 

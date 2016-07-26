@@ -35,13 +35,7 @@ export class ChannelComponent extends React.Component {
     }
 
     saveValue(name, value, channel) {
-        this.dataService.save(name, value, channel, response => {
-            if (response.channels.length === 1) {
-                /*this.setState({
-                    channel: response.channels[0]
-                });*/
-            }
-        });
+        this.dataService.save(name, value, channel, response => {});
     }
 
     increaseGain() {
@@ -56,6 +50,25 @@ export class ChannelComponent extends React.Component {
             let gain = this.state.channel.gain - 1;
             this.saveValue('PGNS', gain, this.state.channel.no);
         }
+    }
+
+    gainStartHandler(callback) {
+        this.timerStarted = (new Date()).getTime();
+        if (this.timer) {
+            this.timer = clearInterval(this.timer);
+        }
+        this.timer = setInterval(() => callback.call(this), 250);
+    }
+
+    gainEndHandler(callback) {
+        let now = (new Date()).getTime();
+        if (now - this.timerStarted < 250) {
+            if (callback) {
+                callback.call(this);
+            }
+        }
+        clearInterval(this.timer);
+        this.timer = null;
     }
 
     clearPeak() {
@@ -112,8 +125,42 @@ export class ChannelComponent extends React.Component {
                             <InlineEditorComponent type="gain" value={this.getGainDisplayValue(channel.gain)} name="PGNS" channel={channel.no} maxLength="2" />
                         </div>
                         <div className="controls">
-                            <div className={'increase' + (channel.gain >= 68 ? ' disabled' : '')} onClick={this.increaseGain.bind(this)}></div>
-                            <div className={'decrease' + (channel.gain <= 0 ? ' disabled' : '')} onClick={this.decreaseGain.bind(this)}></div>
+                            <div
+                                className={'increase' + (channel.gain >= 68 ? ' disabled' : '')}
+                                onMouseDown={() => {
+                                    this.gainStartHandler(this.increaseGain);
+                                }}
+                                onMouseUp={() => {
+                                    this.gainEndHandler(this.increaseGain);
+                                }}
+                                onTouchStart={() => {
+                                    this.gainStartHandler(this.increaseGain);
+                                }}
+                                onTouchEnd={() => {
+                                    this.gainEndHandler(this.increaseGain);
+                                }}
+                                onTouchCancel={() => {
+                                    this.gainEndHandler();
+                                }}>
+                            </div>
+                            <div
+                                className={'decrease' + (channel.gain <= 0 ? ' disabled' : '')}
+                                onMouseDown={() => {
+                                    this.gainStartHandler(this.decreaseGain);
+                                }}
+                                onMouseUp={() => {
+                                    this.gainEndHandler(this.decreaseGain);
+                                }}
+                                onTouchStart={() => {
+                                    this.gainStartHandler(this.decreaseGain);
+                                }}
+                                onTouchEnd={() => {
+                                    this.gainStartHandler(this.decreaseGain);
+                                }}
+                                onTouchCancel={() => {
+                                    this.gainEndHandler();
+                                }}>
+                            </div>
                         </div>
                     </div>
                     <div className="actions">

@@ -8,5 +8,10 @@
     <body>
         <div id="app" />
         <script src="public/bundle.js" type="text/javascript"></script>
+        <script>
+            if (!!("ontouchstart" in window) || window.navigator.msMaxTouchPoints > 0) {
+                document.body.className = 'touch';
+            }
+        </script>
     </body>
 </html>

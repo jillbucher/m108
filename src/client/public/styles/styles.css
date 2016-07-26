@@ -251,31 +251,37 @@ header {
 }
 
 .gain .controls > div {
-    background-image: url("../images/gainDOWN.jpg");
+    background: url("../images/sprite.png") 0 0 no-repeat;
     display: block;
     width: 75px;
     height: 38px;
     cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
-.gain .controls > div:hover {
-    background-image: url("../images/gainDOWNhover.jpg");
+body:not(.touch) .gain .controls > div:hover {
+    background-position: 0 -76px;
 }
 
-.gain .controls > div:active {
-    background-image: url("../images/gainDOWNclick.jpg");
+div.preamp .gain .controls > div:active,
+div.preamp .gain .controls > div:focus {
+    background-position: 0 -38px;
 }
 
 .gain .controls > div.increase {
-    background-image: url("../images/gainUP.jpg");
+    background-position: 0 -114px;
 }
 
-.gain .controls > div.increase:hover {
-    background-image: url("../images/gainUPhover.jpg");
+body:not(.touch) .gain .controls > div.increase:hover {
+    background-position: 0 -190px;
 }
 
-.gain .controls > div.increase:active {
-    background-image: url("../images/gainUPclick.jpg");
+div.preamp .gain .controls > div.increase:active,
+div.preamp .gain .controls > div.increase:focus {
+    background-position: 0 -152px;
 }
 
 .gain .controls > div:first-child {
@@ -287,13 +293,15 @@ header {
 }
 
 .gain .controls > div.disabled:hover,
-.gain .controls > div.disabled:active {
-    background-image: url("../images/gainDOWN.jpg");
+.gain .controls > div.disabled:active,
+.gain .controls > div.disabled:focus {
+    background-position: 0 0;
 }
 
 .gain .controls > div.increase.disabled:hover,
-.gain .controls > div.increase.disabled:active {
-    background-image: url("../images/gainUP.jpg");
+.gain .controls > div.increase.disabled:active,
+.gain .controls > div.increase.disabled:focus {
+    background-position: 0 -114px;
 }
 
 .actions a {

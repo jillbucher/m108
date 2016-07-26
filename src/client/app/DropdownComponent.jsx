@@ -18,7 +18,7 @@ export class DropdownComponent extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.selected !== this.props.selected) {
+        if (prevProps.selected !== this.state.selected.value) {
             this.setSelectedFromProps();
         }
     }
