@@ -56,7 +56,7 @@ export class InlineEditorComponent extends React.Component {
         if (event.keyCode === 13) {
             this.save();
         } else if (this.props.type === 'name') {
-            //Allow a-zA-Z0-9-_
+            //Allow a-zA-Z0-9-_ (on keypad as well)
             if ((event.keyCode > 57 && event.keyCode < 65)
                 || (event.keyCode > 90 && event.keyCode < 96)
                 || (event.keyCode > 105 && event.keyCode !== 189 && event.keyCode !== 109)
@@ -69,13 +69,11 @@ export class InlineEditorComponent extends React.Component {
         } else if (this.props.type === 'gain') {
             if (
                     (event.keyCode > 57 && (event.keyCode < 96 || event.keyCode > 105) && event.keyCode !== 189 && event.keyCode !== 109)
-                    || event.shiftKey
+                    || (event.shiftKey && event.keyCode !== 37 && event.keyCode !== 39)
                 ) {
                 event.preventDefault();
             } else if (event.keyCode >= 48) {
-                if (parseInt(event.target.value, 10) >= 7) {
-                    event.preventDefault();
-                } else if (event.target.value === '-' && event.keyCode !== 54 && event.keyCode !== 102) {
+                if (event.target.value === '-' && event.keyCode !== 54 && event.keyCode !== 102) {
                     event.preventDefault();
                 } else if (event.target.value.length === 0 && (event.keyCode === 48 || event.keyCode === 96)) {
                     event.preventDefault();

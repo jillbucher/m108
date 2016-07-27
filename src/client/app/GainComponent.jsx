@@ -55,16 +55,16 @@ export class GainComponent extends React.Component {
         }, 250);
 
         let eventName = 'mouseup';
-        if (event.type !== 'mousedown') {
+        if (e.type !== 'mousedown') {
             eventName = 'touchend';
         }
-        document.body.addEventListener(eventName, this.handler);
+        window.addEventListener(eventName, this.handler);
     }
 
     gainEndHandler(e) {
         clearInterval(this.timer);
-        document.body.removeEventListener('mouseup', this.handler);
-        document.body.removeEventListener('touchend', this.handler);
+        window.removeEventListener('mouseup', this.handler);
+        window.removeEventListener('touchend', this.handler);
 
         if (ReactDOM.findDOMNode(this.refs.gainControl).contains(e.target)) {
             let now = (new Date()).getTime();

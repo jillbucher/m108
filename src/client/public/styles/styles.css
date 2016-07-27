@@ -112,6 +112,10 @@ body {
     margin: 0 auto;
     min-width: 1245px;
     max-width: 1430px;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
 }
 
 header {
@@ -256,10 +260,6 @@ header {
     width: 75px;
     height: 38px;
     cursor: pointer;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 
 body:not(.touch) .gain .controls > div:hover {
@@ -314,10 +314,6 @@ div.preamp .gain .controls > div.increase:focus {
     margin-right: 7px;
     cursor: pointer;
     text-align: center;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
 }
 .actions a:last-child {
     margin-right: 0;
