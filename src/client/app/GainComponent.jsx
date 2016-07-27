@@ -44,11 +44,10 @@ export class GainComponent extends React.Component {
         }
     }
 
-
     gainStartHandler(e) {
         this.timerStarted = (new Date()).getTime();
         if (this.timer) {
-            this.timer = clearInterval(this.timer);
+            this.cancelGainHold();
         }
         this.timer = setInterval(() => {
             this.adjustGain();
@@ -62,9 +61,7 @@ export class GainComponent extends React.Component {
     }
 
     gainEndHandler(e) {
-        clearInterval(this.timer);
-        window.removeEventListener('mouseup', this.handler);
-        window.removeEventListener('touchend', this.handler);
+        this.cancelGainHold();
 
         if (ReactDOM.findDOMNode(this.refs.gainControl).contains(e.target)) {
             let now = (new Date()).getTime();
@@ -73,37 +70,33 @@ export class GainComponent extends React.Component {
                     this.adjustGain();
             }
         }
+    }
+
+    cancelGainHold() {
+        clearInterval(this.timer);
+        window.removeEventListener('mouseup', this.handler);
+        window.removeEventListener('touchend', this.handler);
         this.timer = null;
     }
 
     render() {
         let gain = this.state.gain || this.props.gain;
-        let touch = false;
-        if (!!("ontouchstart" in window) || window.navigator.msMaxTouchPoints > 0) {
-            touch = true;
-        }
 
         let className = this.props.type;
         if (!this.allowAdjust(gain)) {
             className += ' disabled';
         }
-        if (touch) {
-            return <div ref="gainControl"
-                className={className}
-                onTouchStart={(e) => {
-                    this.gainStartHandler(e);
-                }}
-                onTouchCancel={(e) => {
-                    this.gainEndHandler(e);
-                }}>
-            </div>;
-        } else {
-            return <div ref="gainControl"
-                className={className}
-                onMouseDown={(e) => {
-                    this.gainStartHandler(e);
-                }}>
-            </div>;
-        }
+        return <div ref="gainControl"
+            className={className}
+            onMouseDown={(e) => {
+                this.gainStartHandler(e);
+            }}
+            onTouchStart={(e) => {
+                this.gainStartHandler(e);
+            }}
+            onTouchCancel={(e) => {
+                this.gainEndHandler(e);
+            }}>
+        </div>;
     }
 }
