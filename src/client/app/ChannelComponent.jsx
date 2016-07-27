@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {InlineEditorComponent} from "./InlineEditorComponent.jsx";
+import {GainComponent} from "./GainComponent.jsx";
 import {DataService} from "./DataService.js";
 
 export class ChannelComponent extends React.Component {
@@ -38,41 +39,6 @@ export class ChannelComponent extends React.Component {
         this.dataService.save(name, value, channel, response => {});
     }
 
-    increaseGain() {
-        if (this.state.channel.gain < 68) {
-            let gain = this.state.channel.gain + 1;
-            this.saveValue('PGNS', gain, this.state.channel.no);
-        }
-    }
-
-    decreaseGain() {
-        if (this.state.channel.gain > 0) {
-            let gain = this.state.channel.gain - 1;
-            this.saveValue('PGNS', gain, this.state.channel.no);
-        }
-    }
-
-    gainStartHandler(callback) {
-        this.timerStarted = (new Date()).getTime();
-        if (this.timer) {
-            this.timer = clearInterval(this.timer);
-        }
-        this.timer = setInterval(() => {
-            callback.call(this);
-        }, 250);
-    }
-
-    gainEndHandler(callback) {
-        clearInterval(this.timer);
-        let now = (new Date()).getTime();
-        if ((now - this.timerStarted) < 500) {
-            if (callback) {
-                callback.call(this);
-            }
-        }
-        this.timer = null;
-    }
-
     clearPeak() {
         this.toggleValue('DOVC', this.state.channel.no);
     }
@@ -102,62 +68,6 @@ export class ChannelComponent extends React.Component {
 
     render() {
         let channel = this.state.channel || this.props.channel;
-        let touch = false;
-        if (!!("ontouchstart" in window) || window.navigator.msMaxTouchPoints > 0) {
-            touch = true;
-        }
-
-        let gainUp;
-        if (touch ) {
-            gainUp = <div
-                className={'increase' + (channel.gain >= 68 ? ' disabled' : '')}
-                onTouchStart={() => {
-                    this.gainStartHandler(this.increaseGain);
-                }}
-                onTouchEnd={() => {
-                    this.gainEndHandler(this.increaseGain);
-                }}
-                onTouchCancel={() => {
-                    this.gainEndHandler();
-                }}>
-            </div>
-        } else {
-            gainUp = <div
-                className={'increase' + (channel.gain >= 68 ? ' disabled' : '')}
-                onMouseDown={() => {
-                    this.gainStartHandler(this.increaseGain);
-                }}
-                onMouseUp={() => {
-                    this.gainEndHandler(this.increaseGain);
-                }}>
-            </div>
-        }
-        let gainDown;
-        if (touch) {
-            gainDown = <div
-                className={'decrease' + (channel.gain <= 0 ? ' disabled' : '')}
-                onTouchStart={() => {
-                    this.gainStartHandler(this.decreaseGain);
-                }}
-                onTouchEnd={() => {
-                    this.gainEndHandler(this.decreaseGain);
-                }}
-                onTouchCancel={() => {
-                    this.gainEndHandler();
-                }}>
-            </div>;
-        } else {
-            gainDown = <div
-                className={'decrease' + (channel.gain <= 0 ? ' disabled' : '')}
-                onMouseDown={() => {
-                    this.gainStartHandler(this.decreaseGain);
-                }}
-                onMouseUp={() => {
-                    this.gainEndHandler(this.decreaseGain);
-                }}>
-            </div>;
-        }
-
 
         return (
             <div className="channel-wrapper" ref="channelWrapper">
@@ -184,8 +94,8 @@ export class ChannelComponent extends React.Component {
                             <InlineEditorComponent type="gain" value={this.getGainDisplayValue(channel.gain)} name="PGNS" channel={channel.no} maxLength="2" />
                         </div>
                         <div className="controls">
-                            {gainUp}
-                            {gainDown}
+                            <GainComponent type="increase" gain={channel.gain} channel={channel.no} />
+                            <GainComponent type="decrease" gain={channel.gain} channel={channel.no}  />
                         </div>
                     </div>
                     <div className="actions">

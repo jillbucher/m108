@@ -295,13 +295,13 @@ div.preamp .gain .controls > div.increase:focus {
 .gain .controls > div.disabled:hover,
 .gain .controls > div.disabled:active,
 .gain .controls > div.disabled:focus {
-    background-position: 0 0;
+    background-position: 0 0 !important;
 }
 
 .gain .controls > div.increase.disabled:hover,
 .gain .controls > div.increase.disabled:active,
 .gain .controls > div.increase.disabled:focus {
-    background-position: 0 -114px;
+    background-position: 0 -114px !important;
 }
 
 .actions a {

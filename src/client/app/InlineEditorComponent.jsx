@@ -35,6 +35,9 @@ export class InlineEditorComponent extends React.Component {
         this.props.value = input.value;
         let value = input.value;
         if (this.props.type === 'gain') {
+            if (value.length === 0) {
+                return;
+            }
             value = parseInt(value, 10);
             if (value === -6) {
                 value = 0;
