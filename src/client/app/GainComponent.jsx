@@ -9,7 +9,8 @@ export class GainComponent extends React.Component {
         super();
         this.dataService = new DataService();
         this.state = {};
-        this.handler = (event) => this.gainEndHandler(event);
+        this.startHandler = (event) => this.gainStartHandler(event);
+        this.endHandler = (event) => this.gainEndHandler(event);
     }
 
     componentDidMount() {
@@ -45,7 +46,11 @@ export class GainComponent extends React.Component {
     }
 
     gainStartHandler(e) {
-        this.timerStarted = (new Date()).getTime();
+        if (e.type === 'touchstart') {
+            e.stopPropagation();
+            e.preventDefault();
+        }
+        this.timerStarted = new Date().getTime();
         if (this.timer) {
             this.cancelGainHold();
         }
@@ -57,7 +62,7 @@ export class GainComponent extends React.Component {
         if (e.type !== 'mousedown') {
             eventName = 'touchend';
         }
-        window.addEventListener(eventName, this.handler);
+        window.addEventListener(eventName, this.endHandler);
     }
 
     gainEndHandler(e) {
@@ -74,8 +79,8 @@ export class GainComponent extends React.Component {
 
     cancelGainHold() {
         clearInterval(this.timer);
-        window.removeEventListener('mouseup', this.handler);
-        window.removeEventListener('touchend', this.handler);
+        window.removeEventListener('mouseup', this.endHandler);
+        window.removeEventListener('touchend', this.endHandler);
         this.timer = null;
     }
 
@@ -88,15 +93,9 @@ export class GainComponent extends React.Component {
         }
         return <div ref="gainControl"
             className={className}
-            onMouseDown={(e) => {
-                this.gainStartHandler(e);
-            }}
-            onTouchStart={(e) => {
-                this.gainStartHandler(e);
-            }}
-            onTouchCancel={(e) => {
-                this.gainEndHandler(e);
-            }}>
+            onMouseDown={this.startHandler}
+            onTouchStart={this.startHandler}
+            onTouchCancel={this.endHandler}>
         </div>;
     }
 }
