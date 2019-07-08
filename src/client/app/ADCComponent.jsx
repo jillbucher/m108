@@ -2,19 +2,19 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {DropdownComponent} from "./DropdownComponent.jsx";
-import {DataService} from "./DataService.js";
 
 export class ADCComponent extends React.Component {
 
     constructor() {
         super();
-        this.dataService = new DataService();
         this.state = {};
     }
 
     componentDidMount() {
         this.setState({
-            adc: this.props.add
+            adc: this.props.adc,
+            clockSourceOptions: this.props.clockSourceOptions,
+            sampleRateOptions: this.props.sampleRateOptions
         });
         this.setWidths();
         window.addEventListener('resize', this.setWidths.bind(this));
@@ -22,7 +22,9 @@ export class ADCComponent extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            adc: nextProps.adc
+            adc: nextProps.adc,
+            clockSourceOptions: nextProps.clockSourceOptions,
+            sampleRateOptions: nextProps.sampleRateOptions
         });
     }
 
@@ -30,40 +32,17 @@ export class ADCComponent extends React.Component {
         window.removeEventListener('resize', this.setWidths.bind(this));
     }
 
-    getSampleRateOptions() {
-        return [
-            {value: 0, label: 'Off'},
-            {value: 1, label: '44.1kHz'},
-            {value: 2, label: '48kHz'},
-            {value: 3, label: '88.2kHz'},
-            {value: 4, label: '96kHz'},
-            {value: 5, label: '176.4kHz'},
-            {value: 6, label: '192kHz'},
-            {value: 7, label: 'USB'},
-            {value: 8, label: 'DANTE'}
-        ];
-    }
-
-    getClockSourceOptions() {
-        return [
-            {value: 0, label: 'Internal'},
-            {value: 1, label: 'Word'},
-            {value: 2, label: 'Word-75'},
-            {value: 3, label: 'DANTE'}
-        ];
-    }
-
     getClockOutSourceOptions() {
         return [
-            {value: 0, label: 'Internal'},
-            {value: 1, label: 'External'}
+            {value: 0, text: 'Internal'},
+            {value: 1, text: 'External'}
         ];
     }
 
     getOutputFormatOptions() {
         return [
-            {value: 0, label: 'Consumer'},
-            {value: 1, label: 'Professional'}
+            {value: 0, text: 'Consumer'},
+            {value: 1, text: 'Professional'}
         ];
     }
 
@@ -75,19 +54,21 @@ export class ADCComponent extends React.Component {
 
     render() {
         let adc = this.state.adc || this.props.adc;
+        let sampleRateOptions = this.state.sampleRateOptions || this.props.sampleRateOptions;
+        let clockSourceOptions = this.state.clockSourceOptions || this.props.clockSourceOptions;
 
         return <div className="adc" ref="adc">
             <label className="control">ADC</label>
             <div className="control">
                 <div className="control-inner">
                     <label>Sample Rate</label>
-                    <DropdownComponent name="ADFS" options={this.getSampleRateOptions()} selected={adc.fs} />
+                    <DropdownComponent name="ADFS" options={sampleRateOptions} selected={adc.fs} />
                 </div>
             </div>
             <div className="control">
                 <div className="control-inner">
                     <label>Clock Source</label>
-                    <DropdownComponent name="ADCK" options={this.getClockSourceOptions()} selected={adc.clksrc} />
+                    <DropdownComponent name="ADCK" options={clockSourceOptions} selected={adc.clksrc} />
                 </div>
             </div>
             <div className="control">

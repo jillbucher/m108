@@ -14,11 +14,14 @@ class App extends React.Component {
         this.dataService = new DataService();
         this.state = {
             data: null,
-            online: true
+            online: true,
+            sampleRateOptions: [],
+            clockSourceOptions: []
         };
     }
 
     componentDidMount() {
+        this.fetchADCSettings();
         this.fetch();
         this.timer = setInterval(this.fetch.bind(this), 250);
     }
@@ -43,16 +46,33 @@ class App extends React.Component {
             });
     }
 
+    fetchADCSettings() {
+        this.dataService.getHardwareADCSettings(
+            adcResponse => {
+                this.setState({
+                    sampleRateOptions: adcResponse.adfs,
+                    clockSourceOptions: adcResponse.adck
+                });
+            },
+            () => {
+                this.setState({
+                    sampleRateOptions: [],
+                    clockSourceOptions: []
+                })
+            }
+        );
+    }
+
     render() {
         let body;
-        if (this.state.data) {
+        if (this.state.data && this.state.clockSourceOptions && this.state.sampleRateOptions) {
             let channelComponents = this.state.data.channels.map(channel => {
                 return <ChannelComponent key={channel.id} channel={channel} />;
             });
             body = (
                 <div>
                     <div className="channels">{channelComponents}</div>
-                    <ADCComponent adc={this.state.data.adc} />
+                    <ADCComponent adc={this.state.data.adc} clockSourceOptions={this.state.clockSourceOptions} sampleRateOptions={this.state.sampleRateOptions} />
                     <StatusComponent sys={this.state.data.sys} online={this.state.online} />
                 </div>
             );

@@ -4,6 +4,11 @@ export class DataService {
         this.request('/?CMD_PSTS', callback, errorCallback);
     }
 
+    //This provides the dropdown items for the ADC sample rate and clock source settings
+    getHardwareADCSettings(callback, errorCallback) {
+        this.request('/?CMD_HWAD', callback, errorCallback);
+    }
+
     save(name, value, channel, callback) {
         let paramValue = '';
         if (channel && value !== null) {

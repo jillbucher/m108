@@ -65,7 +65,7 @@ export class DropdownComponent extends React.Component {
         if (this.state.expanded){
             let listItems = this.props.options.map(option => {
                 return <li key={option.value} onClick={this.select.bind(this, option)}>
-                    {option.label}
+                    {option.text}
                 </li>;
             });
             dropdown = <ul className="dropdown-items">
@@ -73,7 +73,7 @@ export class DropdownComponent extends React.Component {
                 </ul>;
         }
 
-        let label = this.state.selected ? this.state.selected.label : '';
+        let label = this.state.selected ? this.state.selected.text : '';
         return (
             <div className="dropdown-menu" tabIndex="0" onBlur={ this.collapse.bind(this)} >
                 <div className="selected" onClick={this.expand.bind(this)}>
